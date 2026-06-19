@@ -1,0 +1,6 @@
+{
+  "name": "GMPC Live Radio",
+  "description": "Interactive online broadcast station. Watch/listen to our weekly DJs, request tracks, and chat live with the studio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
