@@ -200,15 +200,19 @@ export default function GMPCLiveRadio() {
   const [selectedScheduleDay, setSelectedScheduleDay] = React.useState<ScheduleDay | null>(null);
 
   // Theme Switching State - Default is Light, supports complete Dark transition initialized lazily
-  const [theme, setTheme] = React.useState<"light" | "dark">((): "light" | "dark" => {
+  const [theme, setTheme] = React.useState<"light" | "dark">("light");
+
+  // Read saved theme on client mount after hydration to prevent SSR mismatch
+  React.useEffect(() => {
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem("gmpc-theme") as "light" | "dark" | null;
       if (savedTheme === "dark" || savedTheme === "light") {
-        return savedTheme;
+        setTimeout(() => {
+          setTheme(savedTheme);
+        }, 0);
       }
     }
-    return "light";
-  });
+  }, []);
 
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
@@ -1053,26 +1057,9 @@ export default function GMPCLiveRadio() {
                 <span>48KHz | 320kbps | stereo</span>
               </div>
 
-              {/* Suspended Audio play overlay */}
-              <AnimatePresence>
-                {!isPlaying && (
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={togglePlayback}
-                    className="absolute inset-0 z-20 bg-black/45 backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer group"
-                  >
-                    <div className="w-20 h-20 bg-[#ff6c2f] hover:bg-[#ff6c2f]/90 transition-all duration-200 rounded-full flex items-center justify-center text-white shadow-2xl scale-100 hover:scale-105 active:scale-95 group-hover:shadow-[0_0_25px_rgba(255,108,47,0.4)]">
-                      <Play className="w-10 h-10 fill-white stroke-none translate-x-1" />
-                    </div>
-                    <span className="text-white font-mono text-xs uppercase tracking-widest mt-4 font-semibold">
-                      Click to start feed output
-                    </span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
+
+
 
           </div>
 
