@@ -4,7 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import { 
   Play, Pause, Volume2, VolumeX, MessageSquare, Send, Globe, Radio, 
-  ChevronRight, X, Sparkles, Check, Info, Users, ExternalLink, RefreshCw, 
+  ChevronLeft, ChevronRight, X, Sparkles, Check, Info, Users, ExternalLink, RefreshCw, 
   Disc, Sliders, Headphones, Layers, HelpCircle, Flame, Calendar, Sun, Moon
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
@@ -228,6 +228,106 @@ export default function GMPCLiveRadio() {
   // HTML5 canvas drawing reference for visualizer
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const animationFrameId = React.useRef<number | null>(null);
+
+  // Carousel slider reference for the Residents Section
+  const carouselRef = React.useRef<HTMLDivElement | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = React.useState(false);
+  const [canScrollRight, setCanScrollRight] = React.useState(true);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const isHoveredRef = React.useRef(false);
+  const modalOpenRef = React.useRef(false);
+  const pauseAutoScrollTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  React.useEffect(() => {
+    modalOpenRef.current = !!selectedDJForModal;
+  }, [selectedDJForModal]);
+
+  const pauseAutoScroll = () => {
+    isHoveredRef.current = true;
+    if (pauseAutoScrollTimeoutRef.current) {
+      clearTimeout(pauseAutoScrollTimeoutRef.current);
+    }
+    pauseAutoScrollTimeoutRef.current = setTimeout(() => {
+      isHoveredRef.current = false;
+    }, 4000); // Pause auto-scrolling for 4 seconds on manual action
+  };
+
+  const checkScrollLimits = () => {
+    if (carouselRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+      setCanScrollLeft(scrollLeft > 5);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 5);
+
+      // Determine active index based on item scroll position
+      const isSmall = typeof window !== "undefined" && window.innerWidth < 640;
+      const cardWidth = isSmall ? 245 : 280;
+      const actualCardWidth = cardWidth + 24; // item width + gap-6 (24px)
+      const index = Math.round(scrollLeft / actualCardWidth);
+      setActiveIndex(index);
+    }
+  };
+
+  const scrollCarousel = (direction: "left" | "right") => {
+    if (!carouselRef.current) return;
+    pauseAutoScroll();
+    const container = carouselRef.current;
+    const scrollAmount = container.clientWidth * 0.75;
+    const targetScroll = container.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount);
+    container.scrollTo({
+      left: targetScroll,
+      behavior: "smooth"
+    });
+  };
+
+  React.useEffect(() => {
+    const timer = setTimeout(checkScrollLimits, 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  React.useEffect(() => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollTo({ left: 0, behavior: "instant" as any });
+    }
+    const timer = setTimeout(checkScrollLimits, 150);
+    return () => clearTimeout(timer);
+  }, [selectedCategory]);
+
+  // Set up constant motion scrolling loop
+  React.useEffect(() => {
+    let animationId: number;
+    let accumulatedScroll = 0;
+
+    const scrollLoop = () => {
+      if (carouselRef.current && !isHoveredRef.current && !modalOpenRef.current) {
+        const container = carouselRef.current;
+        const speed = 0.45; // smooth subpixel custom speed multiplier
+        
+        accumulatedScroll += speed;
+        if (accumulatedScroll >= 1) {
+          const pixelsToScroll = Math.floor(accumulatedScroll);
+          accumulatedScroll -= pixelsToScroll;
+
+          const { scrollLeft, scrollWidth, clientWidth } = container;
+          
+          if (scrollLeft + clientWidth >= scrollWidth - 2) {
+            container.scrollLeft = 0; // Wrap back to the beginning seamlessly
+          } else {
+            container.scrollLeft += pixelsToScroll;
+          }
+          checkScrollLimits();
+        }
+      }
+      animationId = requestAnimationFrame(scrollLoop);
+    };
+
+    animationId = requestAnimationFrame(scrollLoop);
+    return () => {
+      cancelAnimationFrame(animationId);
+      if (pauseAutoScrollTimeoutRef.current) {
+        clearTimeout(pauseAutoScrollTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Web Audio Nodes (instantiated lazily upon user action to bypass browser policies)
   const audioContextRef = React.useRef<AudioContext | null>(null);
@@ -1214,101 +1314,210 @@ export default function GMPCLiveRadio() {
           </div>
         </div>
 
-        {/* Filter Bar with uppercase labels in simple white cards (Aesthetic rule: normal spacing, 2px tag border radii) */}
-        <div className={cn(
-          "flex flex-wrap gap-2 mb-10 select-none p-4.5 rounded-[16px] border transition-all duration-300",
-          theme === "dark" ? "bg-[#18191c] border-zinc-800" : "bg-white border-[#e5e7eb]"
-        )}>
-          <button
-            onClick={() => setSelectedCategory("ALL")}
-            className={cn(
-              "px-4.5 py-2 rounded-xs font-mono text-[11px] uppercase tracking-wider transition-all border",
-              selectedCategory === "ALL"
-                ? (theme === "dark" ? "bg-[#ff6c2f] text-white border-transparent" : "bg-[#191c1f] text-white border-transparent")
-                : (theme === "dark"
-                    ? "bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800/80"
-                    : "bg-white hover:bg-[#e5e7eb] text-[#191c1f] border-[#e5e7eb]")
-            )}
-          >
-            ALL CAPABILITIES
-          </button>
-          
-          {(["AMAPIANO", "SOUL", "REGGAE", "DANCEHALL", "AFROBEATS", "OLD SCHOOL", "GOSPEL", "DEEP HOUSE"] as GenreCategory[]).map((cat) => (
+        {/* Filter Bar and Navigation wrapper */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+          {/* Filter Bar with uppercase labels in simple white cards (Aesthetic rule: normal spacing, 2px tag border radii) */}
+          <div className={cn(
+            "flex flex-wrap gap-2 select-none p-4.5 rounded-[16px] border transition-all duration-300 flex-1",
+            theme === "dark" ? "bg-[#18191c] border-zinc-800" : "bg-white border-[#e5e7eb]"
+          )}>
             <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
+              onClick={() => setSelectedCategory("ALL")}
               className={cn(
-                "px-4.5 py-2 rounded-xs font-mono text-[11px] uppercase tracking-wider transition-all border",
-                selectedCategory === cat
-                  ? "bg-[#ff6c2f] text-white border-transparent font-semibold"
+                "px-4.5 py-2 rounded-xs font-mono text-[11px] uppercase tracking-wider transition-all border cursor-pointer",
+                selectedCategory === "ALL"
+                  ? (theme === "dark" ? "bg-[#ff6c2f] text-white border-transparent" : "bg-[#191c1f] text-white border-transparent")
                   : (theme === "dark"
                       ? "bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800/80"
                       : "bg-white hover:bg-[#e5e7eb] text-[#191c1f] border-[#e5e7eb]")
               )}
             >
-              {cat}
+              ALL CAPABILITIES
             </button>
-          ))}
-        </div>
-
-        {/* Portrait Product-Style Cards Grid */}
-        <motion.div 
-          layout
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredResidents.map((dj) => (
-              <motion.div
-                layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.25 }}
-                key={dj.id}
-                onClick={() => setSelectedDJForModal(dj)}
+            
+            {(["AMAPIANO", "SOUL", "REGGAE", "DANCEHALL", "AFROBEATS", "OLD SCHOOL", "GOSPEL", "DEEP HOUSE"] as GenreCategory[]).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
                 className={cn(
-                  "group relative aspect-[1/1.3] rounded-[24px] overflow-hidden cursor-pointer shadow-sm hover:shadow-md border active:scale-98 transition-all duration-300",
-                  theme === "dark" ? "bg-[#18191c] border-zinc-850" : "bg-[#ffffff] border-[#e5e7eb]/80"
+                  "px-4.5 py-2 rounded-xs font-mono text-[11px] uppercase tracking-wider transition-all border cursor-pointer",
+                  selectedCategory === cat
+                    ? "bg-[#ff6c2f] text-white border-transparent font-semibold"
+                    : (theme === "dark"
+                        ? "bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800/80"
+                        : "bg-white hover:bg-[#e5e7eb] text-[#191c1f] border-[#e5e7eb]")
                 )}
               >
-                {/* Edge-to-edge Portrait Imagery */}
-                <div className="absolute inset-0 z-0">
-                  <Image
-                    src={dj.imageUrl}
-                    alt={dj.name}
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                    className="object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
-                    referrerPolicy="no-referrer"
-                  />
-                  {/* Subtle vignette shade for readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/35" />
-                </div>
+                {cat}
+              </button>
+            ))}
+          </div>
 
-                {/* Info overlays */}
-                <div className="absolute inset-0 z-10 p-5 flex flex-col justify-between">
-                  <div className="flex items-start justify-between">
-                    <span className="bg-white/10 text-white font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-sm backdrop-blur-sm select-none">
-                      {dj.genre}
-                    </span>
-                    <div className="w-8 h-8 rounded-full bg-white/15 hover:bg-[#ff6c2f]/90 text-white flex items-center justify-center backdrop-blur-sm group-hover:bg-[#ff6c2f] transition-all duration-200">
-                      <Play className="w-3.5 h-3.5 fill-current stroke-none translate-x-0.5" />
+          {/* Slider Controllers */}
+          <div className="flex items-center gap-2 shrink-0 self-end md:self-auto bg-black/5 dark:bg-white/5 py-2 px-3 rounded-full border border-black/10 dark:border-white/10 select-none">
+            <span className={cn(
+              "font-mono text-[10px] uppercase font-bold tracking-widest px-2.5",
+              theme === "dark" ? "text-zinc-500" : "text-zinc-400"
+            )}>
+              NAVIGATE
+            </span>
+            <button
+              onClick={() => scrollCarousel("left")}
+              disabled={!canScrollLeft}
+              className={cn(
+                "w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer border active:scale-95",
+                !canScrollLeft
+                  ? "opacity-30 cursor-not-allowed border-transparent text-zinc-400"
+                  : theme === "dark"
+                    ? "bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800 hover:text-white"
+                    : "bg-white hover:bg-[#e5e7eb] text-[#191c1f] border-[#e5e7eb]"
+              )}
+              title="Slide Left"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => scrollCarousel("right")}
+              disabled={!canScrollRight}
+              className={cn(
+                "w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer border active:scale-95",
+                !canScrollRight
+                  ? "opacity-30 cursor-not-allowed border-transparent text-zinc-400"
+                  : theme === "dark"
+                    ? "bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800 hover:text-white"
+                    : "bg-white hover:bg-[#e5e7eb] text-[#191c1f] border-[#e5e7eb]"
+              )}
+              title="Slide Right"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Sliding Carousel Card track wrapper */}
+        <div className="relative group/carousel">
+          {/* Subtle fade modifiers on left and right borders of the viewport area */}
+          <div className={cn(
+            "absolute -left-3 top-0 bottom-0 w-12 z-20 pointer-events-none transition-opacity duration-300",
+            canScrollLeft ? "opacity-100" : "opacity-0"
+          )} style={{
+            background: theme === "dark" 
+              ? "linear-gradient(to right, #111214 0%, rgba(17, 18, 20, 0) 100%)" 
+              : "linear-gradient(to right, #e5e7eb 0%, rgba(229, 231, 235, 0) 100%)"
+          }} />
+          <div className={cn(
+            "absolute -right-3 top-0 bottom-0 w-12 z-20 pointer-events-none transition-opacity duration-300",
+            canScrollRight ? "opacity-100" : "opacity-0"
+          )} style={{
+            background: theme === "dark" 
+              ? "linear-gradient(to left, #111214 0%, rgba(17, 18, 20, 0) 100%)" 
+              : "linear-gradient(to left, #e5e7eb 0%, rgba(229, 231, 235, 0) 100%)"
+          }} />
+
+          {/* Carousel Track container */}
+          <div 
+            ref={carouselRef}
+            onScroll={checkScrollLimits}
+            onMouseEnter={() => { isHoveredRef.current = true; }}
+            onMouseLeave={() => { isHoveredRef.current = false; }}
+            onTouchStart={() => { isHoveredRef.current = true; }}
+            onTouchEnd={() => { isHoveredRef.current = false; }}
+            className="flex overflow-x-auto gap-6 pb-6 pt-1 scrollbar-none"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              scrollBehavior: "auto"
+            }}
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredResidents.map((dj) => (
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.25 }}
+                  key={dj.id}
+                  className="w-[245px] sm:w-[280px] shrink-0"
+                >
+                  <div
+                    onClick={() => setSelectedDJForModal(dj)}
+                    className={cn(
+                      "group/card relative aspect-[1/1.3] rounded-[24px] overflow-hidden cursor-pointer shadow-sm hover:shadow-md border active:scale-98 transition-all duration-300 w-full",
+                      theme === "dark" ? "bg-[#18191c] border-zinc-850" : "bg-[#ffffff] border-[#e5e7eb]/80"
+                    )}
+                  >
+                    {/* Edge-to-edge Portrait Imagery */}
+                    <div className="absolute inset-0 z-0">
+                      <Image
+                        src={dj.imageUrl}
+                        alt={dj.name}
+                        fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                        className="object-cover opacity-90 transition-transform duration-500 group-hover/card:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                      {/* Subtle vignette shade for readability */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/35" />
+                    </div>
+
+                    {/* Info overlays */}
+                    <div className="absolute inset-0 z-10 p-5 flex flex-col justify-between">
+                      <div className="flex items-start justify-between">
+                        <span className="bg-white/10 text-white font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-sm backdrop-blur-sm select-none">
+                          {dj.genre}
+                        </span>
+                        <div className="w-8 h-8 rounded-full bg-white/15 hover:bg-[#ff6c2f]/90 text-white flex items-center justify-center backdrop-blur-sm group-hover/card:bg-[#ff6c2f] transition-all duration-200">
+                          <Play className="w-3.5 h-3.5 fill-current stroke-none translate-x-0.5" />
+                        </div>
+                      </div>
+
+                      <div className="space-y-0.5 select-none">
+                        <h3 className="text-white font-sans text-base font-bold uppercase tracking-tight truncate group-hover/card:text-[#ffa17a] transition-colors">
+                          {dj.name}
+                        </h3>
+                        <p className="text-[#a3a3a3] font-mono text-[9px] uppercase tracking-wider">
+                          {dj.role}
+                        </p>
+                      </div>
                     </div>
                   </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
 
-                  <div className="space-y-0.5 select-none">
-                    <h3 className="text-white font-sans text-base font-bold uppercase tracking-tight truncate group-hover:text-[#ffa17a] transition-colors">
-                      {dj.name}
-                    </h3>
-                    <p className="text-[#a3a3a3] font-mono text-[9px] uppercase tracking-wider">
-                      {dj.role}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
+          {/* Quick Manual Indicator Dots */}
+          <div className="flex flex-wrap justify-center items-center gap-2 mt-2 select-none max-w-full px-4">
+            {filteredResidents.map((dj, index) => (
+              <button
+                key={dj.id}
+                onClick={() => {
+                  pauseAutoScroll();
+                  if (carouselRef.current) {
+                    const isSmall = typeof window !== "undefined" && window.innerWidth < 640;
+                    const cardWidth = isSmall ? 245 : 280;
+                    const actualCardWidth = cardWidth + 24; // Width + gap-6
+                    carouselRef.current.scrollTo({
+                      left: index * actualCardWidth,
+                      behavior: "smooth"
+                    });
+                  }
+                }}
+                className={cn(
+                  "h-1.5 rounded-full transition-all duration-300 cursor-pointer",
+                  activeIndex === index 
+                    ? "w-6 bg-[#ff6c2f]" 
+                    : theme === "dark" 
+                      ? "w-1.5 bg-zinc-700 hover:bg-zinc-500" 
+                      : "w-1.5 bg-zinc-300 hover:bg-zinc-500"
+                )}
+                title={`Go to ${dj.name}`}
+              />
             ))}
-          </AnimatePresence>
-        </motion.div>
+          </div>
+
+        </div>
       </section>
 
       {/* ABOUT GMPC / HISTORICAL BACKGROUND SECTION */}
