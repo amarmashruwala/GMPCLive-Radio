@@ -5,7 +5,8 @@ import Image from "next/image";
 import { 
   Play, Pause, Volume2, VolumeX, MessageSquare, Send, Globe, Radio, 
   ChevronLeft, ChevronRight, X, Sparkles, Check, Info, Users, ExternalLink, RefreshCw, 
-  Disc, Sliders, Headphones, Layers, HelpCircle, Flame, Calendar, Sun, Moon, ArrowUp
+  Disc, Sliders, Headphones, Layers, HelpCircle, Flame, Calendar, Sun, Moon, ArrowUp, Mic,
+  Phone, Mail, Facebook, Youtube, Music, Instagram
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -195,6 +196,13 @@ export default function GMPCLiveRadio() {
   const [emailInput, setEmailInput] = React.useState("");
   const [emailSubscribed, setEmailSubscribed] = React.useState(false);
   const [isSubmittingEmail, setIsSubmittingEmail] = React.useState(false);
+
+  // Contact form state
+  const [contactName, setContactName] = React.useState("");
+  const [contactEmail, setContactEmail] = React.useState("");
+  const [contactMessage, setContactMessage] = React.useState("");
+  const [isSubmittingContact, setIsSubmittingContact] = React.useState(false);
+  const [contactSuccess, setContactSuccess] = React.useState(false);
 
   // Interactive DJ schedule details modal/drawer state
   const [selectedScheduleDay, setSelectedScheduleDay] = React.useState<ScheduleDay | null>(null);
@@ -1133,23 +1141,6 @@ export default function GMPCLiveRadio() {
                   />
                 </div>
               )}
-
-              {/* Live Overlay GUI elements */}
-              <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-                <span className="bg-[#ff6c2f] text-white px-2 py-0.5 rounded-sm font-mono text-[9px] uppercase tracking-wider font-bold">
-                  LIVE
-                </span>
-                <span className="bg-black/60 text-white/90 px-2 py-0.5 rounded-sm font-mono text-[9px] tracking-wider backdrop-blur-sm">
-                  {currentTimeStr}
-                </span>
-              </div>
-
-              {/* Right side recording rate info */}
-              <div className="absolute top-4 right-4 z-10 hidden sm:flex items-center gap-1.5 bg-black/60 px-2.5 py-1 rounded-sm text-white/80 font-mono text-[9px] backdrop-blur-sm">
-                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                <span>48KHz | 320kbps | stereo</span>
-              </div>
-
             </div>
 
 
@@ -1562,6 +1553,8 @@ export default function GMPCLiveRadio() {
         </div>
       </section>
 
+
+
       {/* PUBLIC FILE & STATS SECTION */}
       <section id="public-file" className="max-w-7xl mx-auto w-full px-4 md:px-8 mt-24 md:mt-32 scroll-mt-24">
         
@@ -1746,6 +1739,460 @@ export default function GMPCLiveRadio() {
             </div>
           </div>
 
+        </div>
+      </section>
+
+      {/* JOIN US SECTION */}
+      <section id="join-us-section" className="max-w-7xl mx-auto w-full px-4 md:px-8 mt-24 md:mt-32 scroll-mt-24 select-none">
+        {/* Section Header Block */}
+        <div className={cn(
+          "grid grid-cols-1 md:grid-cols-12 gap-8 border-b pb-8 mb-10 select-none transition-colors",
+          theme === "dark" ? "border-zinc-800" : "border-[#e5e7eb]"
+        )}>
+          <div className="md:col-span-6 space-y-1">
+            <span className="font-mono text-[10px] tracking-widest text-[#ff6c2f] font-bold uppercase block">
+              GET INVOLVED
+            </span>
+            <h2 className={cn(
+              "font-sans font-bold text-[36px] sm:text-[48px] uppercase tracking-[-0.03em] leading-none transition-colors",
+              theme === "dark" ? "text-white" : "text-[#1a1c1f]"
+            )}>
+              JOIN US
+            </h2>
+          </div>
+          <div className="md:col-span-6 flex flex-col justify-end">
+            <p className={cn(
+              "font-sans text-[15px] leading-[1.45] max-w-xl transition-colors",
+              theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+            )}>
+              GMPCLive Radio is powered by passionate volunteers like you. Whether you have broadcasting experience or just a love for radio, we have a place for you.
+            </p>
+          </div>
+        </div>
+
+        {/* 3 Options Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Card 1: Become a DJ */}
+          <div className={cn(
+            "p-8 rounded-[24px] border transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1 hover:shadow-lg",
+            theme === "dark" 
+              ? "bg-[#18191c] border-zinc-800 hover:border-zinc-700 hover:shadow-black/40" 
+              : "bg-white border-[#e5e7eb] hover:shadow-zinc-100"
+          )}>
+            <div className="space-y-6">
+              <div className={cn(
+                "w-12 h-12 rounded-xl flex items-center justify-center transition-colors",
+                theme === "dark" ? "bg-[#ff6c2f]/10 text-[#ff6c2f]" : "bg-[#ff6c2f]/5 text-[#ff6c2f]"
+              )}>
+                <Mic className="w-5 h-5" />
+              </div>
+              <div className="space-y-3">
+                <h3 className={cn(
+                  "font-sans font-bold text-xl tracking-tight transition-colors",
+                  theme === "dark" ? "text-white" : "text-[#1a1c1f]"
+                )}>
+                  Become a DJ
+                </h3>
+                <p className={cn(
+                  "font-sans text-[14px] leading-relaxed transition-colors",
+                  theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+                )}>
+                  Share your passion for music and host your own radio show. No experience necessary - we&apos;ll provide training and support.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: On-Air Talent */}
+          <div className={cn(
+            "p-8 rounded-[24px] border transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1 hover:shadow-lg",
+            theme === "dark" 
+              ? "bg-[#18191c] border-zinc-800 hover:border-zinc-700 hover:shadow-black/40" 
+              : "bg-white border-[#e5e7eb] hover:shadow-zinc-100"
+          )}>
+            <div className="space-y-6">
+              <div className={cn(
+                "w-12 h-12 rounded-xl flex items-center justify-center transition-colors",
+                theme === "dark" ? "bg-[#ff6c2f]/10 text-[#ff6c2f]" : "bg-[#ff6c2f]/5 text-[#ff6c2f]"
+              )}>
+                <Radio className="w-5 h-5" />
+              </div>
+              <div className="space-y-3">
+                <h3 className={cn(
+                  "font-sans font-bold text-xl tracking-tight transition-colors",
+                  theme === "dark" ? "text-white" : "text-[#1a1c1f]"
+                )}>
+                  On-Air Talent
+                </h3>
+                <p className={cn(
+                  "font-sans text-[14px] leading-relaxed transition-colors",
+                  theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+                )}>
+                  Bring your voice to the airwaves. Whether you&apos;re into talk shows, interviews, or news, we need passionate presenters.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3: Community Support */}
+          <div className={cn(
+            "p-8 rounded-[24px] border transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1 hover:shadow-lg",
+            theme === "dark" 
+              ? "bg-[#18191c] border-zinc-800 hover:border-zinc-700 hover:shadow-black/40" 
+              : "bg-white border-[#e5e7eb] hover:shadow-zinc-100"
+          )}>
+            <div className="space-y-6">
+              <div className={cn(
+                "w-12 h-12 rounded-xl flex items-center justify-center transition-colors",
+                theme === "dark" ? "bg-[#ff6c2f]/10 text-[#ff6c2f]" : "bg-[#ff6c2f]/5 text-[#ff6c2f]"
+              )}>
+                <Users className="w-5 h-5" />
+              </div>
+              <div className="space-y-3">
+                <h3 className={cn(
+                  "font-sans font-bold text-xl tracking-tight transition-colors",
+                  theme === "dark" ? "text-white" : "text-[#1a1c1f]"
+                )}>
+                  Community Support
+                </h3>
+                <p className={cn(
+                  "font-sans text-[14px] leading-relaxed transition-colors",
+                  theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+                )}>
+                  Help us run events, manage social media, handle promotions, and engage with our audience on the ground.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* READY TO MAKE A DIFFERENCE BANNER */}
+      <section id="make-a-difference-section" className="max-w-7xl mx-auto w-full px-4 md:px-8 mt-16 md:mt-24 select-none">
+        <div className={cn(
+          "p-10 md:p-14 rounded-[20px] border text-center transition-colors duration-300",
+          theme === "dark" 
+            ? "bg-[#18191c]/50 border-zinc-800" 
+            : "bg-[#f2f4f8] border-[#e5e7eb]"
+        )}>
+          <h2 className={cn(
+            "font-sans font-bold text-2xl sm:text-3xl tracking-tight transition-colors mb-4",
+            theme === "dark" ? "text-white" : "text-[#1a1c1f]"
+          )}>
+            Ready to Make a Difference?
+          </h2>
+          <p className={cn(
+            "font-sans text-sm sm:text-base leading-relaxed max-w-3xl mx-auto transition-colors",
+            theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+          )}>
+            Join our community of broadcasters, creators, and radio enthusiasts. Contact us today to learn more about volunteering opportunities and how you can be part of GMPCLive Radio.
+          </p>
+        </div>
+      </section>
+
+      {/* GET IN TOUCH & CONTACT INFORMATION SPLIT SECTION */}
+      <section id="contact-section" className="max-w-7xl mx-auto w-full px-4 md:px-8 mt-16 md:mt-24 select-none">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          
+          {/* LEFT COLUMN: GET IN TOUCH FORM */}
+          <div className="lg:col-span-7 space-y-6">
+            <div>
+              <h2 className={cn(
+                "font-sans font-bold text-2xl sm:text-3xl tracking-tight transition-colors",
+                theme === "dark" ? "text-white" : "text-[#1a1c1f]"
+              )}>
+                Get In Touch
+              </h2>
+              <p className={cn(
+                "font-sans text-sm mt-2 transition-colors",
+                theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+              )}>
+                Have a question, comment, or want to get involved? We&apos;d love to hear from you!
+              </p>
+            </div>
+
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!contactName || !contactEmail || !contactMessage) return;
+                setIsSubmittingContact(true);
+                setTimeout(() => {
+                  setIsSubmittingContact(false);
+                  setContactSuccess(true);
+                  setContactName("");
+                  setContactEmail("");
+                  setContactMessage("");
+                  setTimeout(() => setContactSuccess(false), 5000);
+                }, 1000);
+              }}
+              className="space-y-4"
+            >
+              <AnimatePresence mode="wait">
+                {contactSuccess && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="p-4 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-xs font-mono"
+                  >
+                    MESSAGE TRANSMITTED SECURELY. THANK YOU FOR GETTING IN TOUCH!
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <input
+                    type="text"
+                    required
+                    placeholder="Your Name"
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
+                    className={cn(
+                      "w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#ff6c2f]/40 transition-all font-sans text-sm",
+                      theme === "dark" 
+                        ? "bg-zinc-900 border-zinc-800 text-white placeholder-zinc-500" 
+                        : "bg-white border-zinc-200 text-zinc-900 placeholder-zinc-400"
+                    )}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <input
+                    type="email"
+                    required
+                    placeholder="Your Email"
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                    className={cn(
+                      "w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#ff6c2f]/40 transition-all font-sans text-sm",
+                      theme === "dark" 
+                        ? "bg-zinc-900 border-zinc-800 text-white placeholder-zinc-500" 
+                        : "bg-white border-zinc-200 text-zinc-900 placeholder-zinc-400"
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <textarea
+                  required
+                  rows={4}
+                  placeholder="Your Message"
+                  value={contactMessage}
+                  onChange={(e) => setContactMessage(e.target.value)}
+                  className={cn(
+                    "w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#ff6c2f]/40 transition-all font-sans text-sm resize-none",
+                    theme === "dark" 
+                      ? "bg-zinc-900 border-zinc-800 text-white placeholder-zinc-500" 
+                      : "bg-white border-zinc-200 text-zinc-900 placeholder-zinc-400"
+                  )}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmittingContact}
+                className={cn(
+                  "font-mono text-[11px] uppercase tracking-widest font-bold px-8 py-4.5 rounded-full shadow-lg transition-all duration-150 transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer text-white",
+                  isSubmittingContact 
+                    ? "bg-zinc-600 cursor-not-allowed" 
+                    : "bg-[#ff6c2f] hover:bg-[#ff804a]"
+                )}
+              >
+                <Send className="w-3.5 h-3.5" />
+                {isSubmittingContact ? "SENDING..." : "SEND MESSAGE"}
+              </button>
+            </form>
+          </div>
+
+          {/* RIGHT COLUMN: CONTACT INFO & LINKS & FOLLOW US */}
+          <div className="lg:col-span-5 space-y-8 lg:pl-4">
+            
+            {/* Contact Details */}
+            <div className="space-y-4">
+              <h3 className={cn(
+                "font-sans font-bold text-lg transition-colors",
+                theme === "dark" ? "text-white" : "text-[#1a1c1f]"
+              )}>
+                Contact Information
+              </h3>
+              <div className="space-y-3 font-sans text-sm">
+                <div className="flex items-center gap-3">
+                  <Phone className="w-4 h-4 text-[#ff6c2f] shrink-0" />
+                  <span className={theme === "dark" ? "text-zinc-300" : "text-[#1a1c1f]"}>
+                    +79 03 129265
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Mail className="w-4 h-4 text-[#ff6c2f] shrink-0" />
+                  <a 
+                    href="mailto:gmpcliveradio@gmail.com"
+                    className={cn(
+                      "transition-colors hover:text-[#ff6c2f] hover:underline",
+                      theme === "dark" ? "text-zinc-300" : "text-[#1a1c1f]"
+                    )}
+                  >
+                    gmpcliveradio@gmail.com
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Links */}
+            <div className="space-y-4">
+              <h3 className={cn(
+                "font-sans font-bold text-lg transition-colors",
+                theme === "dark" ? "text-white" : "text-[#1a1c1f]"
+              )}>
+                Quick Links
+              </h3>
+              <div className="grid grid-cols-2 gap-y-2 gap-x-4 font-sans text-sm">
+                <a 
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className={cn(
+                    "transition-colors hover:text-[#ff6c2f]",
+                    theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+                  )}
+                >
+                  Home
+                </a>
+                <a 
+                  href="#weekly-schedule"
+                  className={cn(
+                    "transition-colors hover:text-[#ff6c2f]",
+                    theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+                  )}
+                >
+                  Schedule
+                </a>
+                <a 
+                  href="#residents-grid"
+                  className={cn(
+                    "transition-colors hover:text-[#ff6c2f]",
+                    theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+                  )}
+                >
+                  Shows
+                </a>
+                <a 
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  className={cn(
+                    "transition-colors hover:text-[#ff6c2f]",
+                    theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+                  )}
+                >
+                  Events
+                </a>
+                <a 
+                  href="#about-section"
+                  className={cn(
+                    "transition-colors hover:text-[#ff6c2f]",
+                    theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+                  )}
+                >
+                  About
+                </a>
+                <a 
+                  href="#contact-section"
+                  className={cn(
+                    "transition-colors hover:text-[#ff6c2f]",
+                    theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+                  )}
+                >
+                  Contact
+                </a>
+                <a 
+                  href="#join-us-section"
+                  className={cn(
+                    "transition-colors hover:text-[#ff6c2f]",
+                    theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+                  )}
+                >
+                  Join Us
+                </a>
+                <a 
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  className={cn(
+                    "transition-colors hover:text-[#ff6c2f]",
+                    theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
+                  )}
+                >
+                  Privacy Policy
+                </a>
+              </div>
+            </div>
+
+            {/* Follow Us */}
+            <div className="space-y-4">
+              <h3 className={cn(
+                "font-sans font-bold text-sm uppercase tracking-wider transition-colors",
+                theme === "dark" ? "text-white" : "text-[#1a1c1f]"
+              )}>
+                Follow Us
+              </h3>
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110",
+                    theme === "dark" 
+                      ? "bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-[#ff6c2f] hover:border-[#ff6c2f]/40" 
+                      : "bg-[#f2f4f8] text-zinc-600 hover:text-[#ff6c2f]"
+                  )}
+                >
+                  <Facebook className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110",
+                    theme === "dark" 
+                      ? "bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-[#ff6c2f] hover:border-[#ff6c2f]/40" 
+                      : "bg-[#f2f4f8] text-zinc-600 hover:text-[#ff6c2f]"
+                  )}
+                >
+                  <Instagram className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110",
+                    theme === "dark" 
+                      ? "bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-[#ff6c2f] hover:border-[#ff6c2f]/40" 
+                      : "bg-[#f2f4f8] text-zinc-600 hover:text-[#ff6c2f]"
+                  )}
+                >
+                  <Youtube className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://tiktok.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110",
+                    theme === "dark" 
+                      ? "bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-[#ff6c2f] hover:border-[#ff6c2f]/40" 
+                      : "bg-[#f2f4f8] text-zinc-600 hover:text-[#ff6c2f]"
+                  )}
+                >
+                  <Music className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
