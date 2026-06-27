@@ -171,8 +171,8 @@ export default function GMPCLiveRadio() {
   const [isEmbedOpen, setIsEmbedOpen] = React.useState(false);
 
   // Multi-Camera Studio Feeds State
-  type CamFeed = "host" | "deck" | "visualizer";
-  const [activeCam, setActiveCam] = React.useState<CamFeed>("host");
+  type CamFeed = "cam1" | "cam2";
+  const [activeCam, setActiveCam] = React.useState<CamFeed>("cam1");
   const [currentTimeStr, setCurrentTimeStr] = React.useState("23:36:04 UTC");
 
   // Residents Filter & Detail States
@@ -1036,7 +1036,7 @@ export default function GMPCLiveRadio() {
             
             {/* Header Area */}
             <div className={cn(
-              "p-6 border-b flex items-center justify-between transition-colors",
+              "p-6 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors",
               theme === "dark" ? "border-zinc-800" : "border-[#e5e7eb]"
             )}>
               <div className="flex items-center gap-2">
@@ -1055,89 +1055,65 @@ export default function GMPCLiveRadio() {
                 </span>
               </div>
 
-              {/* Live Status indicator */}
-              <div className={cn(
-                "flex items-center gap-1.5 px-3 py-1 rounded-full border font-mono text-[10px] uppercase select-none font-bold transition-all",
-                theme === "dark"
-                  ? "bg-zinc-800/60 border-zinc-700 text-zinc-300"
-                  : "bg-[#e5e7eb]/60 border-[#e5e7eb] text-[#191c1f]/80"
-              )}>
-                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                CAM 01 ACTIVE
+              {/* Multi-Camera Control Switcher */}
+              <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-full border border-black/10 dark:border-white/10 select-none">
+                  {(["cam1", "cam2"] as CamFeed[]).map((feed) => (
+                    <button
+                      key={feed}
+                      onClick={() => setActiveCam(feed)}
+                      className={cn(
+                        "px-3 py-1 rounded-full font-mono text-[9px] uppercase select-none font-bold transition-all cursor-pointer",
+                        activeCam === feed
+                          ? "bg-[#ff6c2f] text-white shadow-sm"
+                          : theme === "dark"
+                            ? "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                            : "text-zinc-600 hover:text-[#191c1f] hover:bg-black/5"
+                      )}
+                    >
+                      {feed === "cam1" && "CAM 01"}
+                      {feed === "cam2" && "CAM 02"}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Live Status indicator */}
+                <div className={cn(
+                  "hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full border font-mono text-[9px] uppercase select-none font-bold transition-all",
+                  theme === "dark"
+                    ? "bg-zinc-800/60 border-zinc-700 text-zinc-300"
+                    : "bg-[#e5e7eb]/60 border-[#e5e7eb] text-[#191c1f]/80"
+                )}>
+                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                  {activeCam === "cam1" ? "CAM 01 ACTIVE" : "CAM 02 ACTIVE"}
+                </div>
               </div>
             </div>
 
             {/* Video / Interactive Feed Display */}
             <div className="relative aspect-video w-full bg-[#191c1f] overflow-hidden group flex items-center justify-center">
               
-              {/* Camera Angle 1: Studio Space Live Stream Overlay */}
-              {activeCam === "host" && (
+              {/* Camera Angle 1: Studio Space Live Stream CAM 01 */}
+              {activeCam === "cam1" && (
+                <div className="absolute inset-0 z-0">
+                  <iframe
+                    src="https://live.gmpclive.com/embed/video"
+                    className="w-full h-full border-none absolute inset-0 z-0"
+                    allow="autoplay; camera; microphone; picture-in-picture"
+                    title="GMPC Live Studio Cam 01"
+                  />
+                </div>
+              )}
+
+              {/* Camera Angle 1b: Studio Space Live Stream CAM 02 */}
+              {activeCam === "cam2" && (
                 <div className="absolute inset-0 z-0">
                   <iframe
                     src="https://vdo.ninja/?view=vBRUKDQ&label=GMPC_DJ_Cam&noaudio&cleanviewer"
                     className="w-full h-full border-none absolute inset-0 z-0"
                     allow="autoplay; camera; microphone; picture-in-picture"
-                    title="GMPC Live Studio Cam"
+                    title="GMPC Live Studio Cam 02"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#191c1f]/40 via-transparent to-transparent pointer-events-none" />
-                  
-                  {/* CRT Interlaced static scanline look */}
-                  <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.15)_50%)] bg-[length:100%_4px] pointer-events-none" />
-                </div>
-              )}
-
-              {/* Camera Angle 2: DJ Decks / Matrix */}
-              {activeCam === "deck" && (
-                <div className="absolute inset-0 z-0 bg-[#25282c] flex flex-col items-center justify-center p-8">
-                  {/* Spinning Vinyl Plate */}
-                  <div className="relative w-48 h-48 sm:w-56 sm:h-56">
-                    <motion.div
-                      animate={isPlaying ? { rotate: 360 } : {}}
-                      transition={
-                        isPlaying 
-                          ? { repeat: Infinity, duration: 2.2, ease: "linear" }
-                          : { duration: 0.5 }
-                      }
-                      className="w-full h-full bg-[#191c1f] rounded-full border-[8px] border-[#c2c2c2] flex items-center justify-center shadow-2xl relative"
-                    >
-                      {/* Grooves */}
-                      <div className="absolute inset-4 rounded-full border border-dashed border-[#a3a3a3]/30" />
-                      <div className="absolute inset-8 rounded-full border border-dashed border-[#a3a3a3]/20" />
-                      <div className="absolute inset-12 rounded-full border border-solid border-[#a3a3a3]/10" />
-                      
-                      {/* Label */}
-                      <div className="w-14 h-14 bg-white rounded-full flex flex-col items-center justify-center p-1 text-[8px] font-mono text-center">
-                        <div className="font-bold text-[#ff6c2f]">GMPC</div>
-                        <div className="text-[6px] text-gray-500 scale-90">33 RPM</div>
-                      </div>
-                    </motion.div>
-                    
-                    {/* Tone Arm Vector */}
-                    <div className="absolute top-0 right-0 w-24 h-32 origin-top-right transform -rotate-12 pointer-events-none">
-                      <div className="w-1.5 h-24 bg-[#c2c2c2] rotate-[20deg] origin-top rounded-full absolute right-8 top-4">
-                        <div className="w-4 h-6 bg-[#ff6c2f] rounded-xs absolute -bottom-2 -left-1" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Deck stats overlay */}
-                  <div className="mt-6 font-mono text-[10px] text-[#a3a3a3] flex gap-8 select-none">
-                    <span>SPEED // 33.3 RPM</span>
-                    <span>PITCH // 0.0%</span>
-                    <span>TRACK // STABLE {isPlaying ? "(SPINNING)" : "(PAUSED)"}</span>
-                  </div>
-                </div>
-              )}
-
-              {/* Camera Angle 3: Oscilloscope wave */}
-              {activeCam === "visualizer" && (
-                <div className="absolute inset-0 z-0 bg-[#121417] flex items-center justify-center">
-                  {/* Glowing amber grids */}
-                  <div className="absolute inset-0 bg-[radial-gradient(#ff6c2f_0.5px,transparent_0.5px)] [background-size:16px_16px] opacity-15" />
-                  <div className="text-center font-mono space-y-2 select-none z-10 pointer-events-none">
-                    <div className="text-[#ff6c2f] text-xs font-semibold tracking-widest animate-pulse uppercase">OSCILLOSCOPE FEED</div>
-                    <div className="text-[#a3a3a3] text-[9px]">SOLDER FREQUENCY MODULATING OVER CHROME CHANNELS</div>
-                  </div>
                 </div>
               )}
 
