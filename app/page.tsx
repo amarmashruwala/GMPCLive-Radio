@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 
 // Static imports of our generated images using the paths confirmed on disk
-import gmpcStudioHero from "@/src/assets/images/gmpc_studio_hero_1781851063719.jpg";
+import gmpcStudioHero from "@/src/assets/images/gmpc_multi_hero_1782565826345.jpg";
 import bensonPic from "@/src/assets/images/benson_portrait_1781851083845.jpg";
 import nubianPic from "@/src/assets/images/nubian_portrait_1781851100791.jpg";
 
