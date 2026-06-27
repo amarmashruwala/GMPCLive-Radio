@@ -202,6 +202,18 @@ export default function GMPCLiveRadio() {
   // Theme Switching State - Default is Light, supports complete Dark transition initialized lazily
   const [theme, setTheme] = React.useState<"light" | "dark">("light");
 
+  // Scroll Position state for dynamic text opacity fade on scroll
+  const [scrollY, setScrollY] = React.useState(0);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Read saved theme on client mount after hydration to prevent SSR mismatch
   React.useEffect(() => {
     if (typeof window !== "undefined") {
@@ -973,13 +985,18 @@ export default function GMPCLiveRadio() {
             className="space-y-4 max-w-3xl"
           >
             {/* Display Specimen Title matching Suisse Intl -0.03em tracking */}
-            <h1 className="text-white text-[72px] sm:text-[90px] md:text-[110px] leading-[0.82] tracking-[-0.04em] font-bold select-none uppercase">
-              GMPC LIVE <br/>
-              <span className="text-white">RADIO</span>
+            <h1 
+              style={{ opacity: Math.max(0, 1 - scrollY / 500) }}
+              className="text-white text-[72px] sm:text-[90px] md:text-[110px] leading-[0.82] tracking-[-0.04em] font-bold select-none uppercase transition-opacity duration-75"
+            >
+              GMPC LIVE
             </h1>
 
             {/* Subheading text */}
-            <p className="text-[#e5e7eb] font-sans text-lg md:text-xl font-normal leading-[1.35] tracking-tight max-w-2xl pt-2">
+            <p 
+              style={{ opacity: Math.max(0, 1 - scrollY / 500) }}
+              className="text-[#e5e7eb] font-sans text-lg md:text-xl font-normal leading-[1.35] tracking-tight max-w-2xl pt-2 transition-opacity duration-75"
+            >
               Watch, listen, and interact with our DJs live — music for the mind, body, and soul. 
               Broadcasting independent global frequencies from our custom-built analog GMPC Studio.
             </p>
