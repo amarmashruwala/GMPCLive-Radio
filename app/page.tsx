@@ -5,7 +5,7 @@ import Image from "next/image";
 import { 
   Play, Pause, Volume2, VolumeX, MessageSquare, Send, Globe, Radio, 
   ChevronLeft, ChevronRight, X, Sparkles, Check, Info, Users, ExternalLink, RefreshCw, 
-  Disc, Sliders, Headphones, Layers, HelpCircle, Flame, Calendar, Sun, Moon
+  Disc, Sliders, Headphones, Layers, HelpCircle, Flame, Calendar, Sun, Moon, ArrowUp
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -1734,7 +1734,7 @@ export default function GMPCLiveRadio() {
 
       {/* FOOTER */}
       <footer className={cn(
-        "max-w-7xl mx-auto w-full px-6 mt-32 select-none border-t pt-12 transition-all duration-300",
+        "max-w-7xl mx-auto w-full px-6 mt-32 select-none border-t pt-12 pb-12 transition-all duration-300",
         theme === "dark" ? "border-zinc-800 text-zinc-400" : "border-[#e5e7eb] text-[#191c1f]/80"
       )}>
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
@@ -1754,54 +1754,28 @@ export default function GMPCLiveRadio() {
             }}>PUBLIC DOCUMENTS</span>
           </div>
         </div>
+
+        {/* TAKE ME TO THE TOP BUTTON */}
+        <div className="flex justify-center mt-12">
+          <button
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className={cn(
+              "flex items-center gap-2 px-5 py-2.5 rounded-full font-mono text-[10px] uppercase tracking-widest font-bold border transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 shadow-sm",
+              theme === "dark"
+                ? "bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-[#ff6c2f] hover:border-[#ff6c2f]/40"
+                : "bg-[#f2f4f8] border-[#e5e7eb] text-[#191c1f] hover:text-[#ff6c2f] hover:border-[#ff6c2f]"
+            )}
+            title="Scroll to Top"
+          >
+            <ArrowUp className="w-3.5 h-3.5 animate-bounce" />
+            <span>TAKE ME TO THE TOP</span>
+          </button>
+        </div>
       </footer>
 
-      {/* PERSISTENT MAIL LIST STICKY BOTTOM BAR */}
-      <aside className="fixed bottom-0 left-0 right-0 z-40 bg-[#ff6c2f] text-white py-4 px-6 md:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 shadow-[0_-8px_30px_rgba(255,108,47,0.22)]">
-        <div className="flex items-center gap-3 select-none">
-          <Flame className="w-5 h-5 text-white animate-bounce shrink-0" />
-          <div className="font-mono text-[11px] uppercase tracking-[0.1em] font-semibold text-white/90">
-            JOIN THE MAITLIST • TUNED TO GOLDEN Frequencies // 
-          </div>
-        </div>
 
-        {/* Newsletter Signup Form */}
-        <div className="w-full sm:w-auto flex-1 max-w-md">
-          {emailSubscribed ? (
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="flex items-center gap-2 text-xs font-mono font-bold uppercase uppercase tracking-wider text-white"
-            >
-              <Check className="w-4 h-4 bg-white text-[#ff6c2f] rounded-full p-0.5" />
-              <span>FREQUENCY KEY ASSIGNED. WELCOME TO GMPC GOLDEN CELL.</span>
-            </motion.div>
-          ) : (
-            <form onSubmit={handleEmailSubscribe} className="flex gap-2">
-              <input
-                type="email"
-                required
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-                placeholder="ENTER EMAIL FOR EXCLUSIVE VAULT CUTS"
-                disabled={isSubmittingEmail}
-                className="flex-1 min-w-0 bg-white/15 hover:bg-white/20 focus:bg-white text-white focus:text-[#191c1f] placeholder-white/70 focus:placeholder-[#a3a3a3] text-xs font-mono uppercase h-[46px] px-4 rounded-sm outline-none border border-transparent focus:border-white/40 transition-all text-xs"
-              />
-              <button
-                type="submit"
-                disabled={isSubmittingEmail}
-                className="bg-[#191c1f] hover:bg-black active:scale-95 h-[46px] px-6 text-white text-xs font-mono font-bold uppercase tracking-widest rounded-sm transition-all duration-150 flex items-center justify-center shrink-0"
-              >
-                {isSubmittingEmail ? (
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <span>TRANSMIT →</span>
-                )}
-              </button>
-            </form>
-          )}
-        </div>
-      </aside>
 
       {/* SCHEDULE DAY LIGHTBOX DIALOG PANEL */}
       <AnimatePresence>
