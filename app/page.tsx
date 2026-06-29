@@ -1676,7 +1676,7 @@ export default function GMPCLiveRadio() {
         </div>
 
         {/* Three Portrait Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
           {/* Driver 1: Benson */}
           <div className="bg-[#191919] text-white rounded-[32px] overflow-hidden p-6 md:p-8 border border-white/5 flex flex-col xl:flex-row items-center gap-8 group">
@@ -1698,14 +1698,7 @@ export default function GMPCLiveRadio() {
               <p className="font-sans text-[#e5e7eb] text-sm leading-relaxed opacity-90 max-w-md">
                 Co-Founder & Technical Lead. The brilliant audio engineer and architect behind the uncompromised custom-built GMPC Studio acoustics, audio rack design, and multi-camera stream automation console.
               </p>
-              <div className="flex gap-3 justify-center xl:justify-start pt-2">
-                <button 
-                  onClick={() => selectChannel(CHANNELS[0], true)}
-                  className="bg-white/10 hover:bg-[#ff6c2f] text-white px-4 py-2 rounded-full font-mono text-[10px] uppercase tracking-wide transition-all duration-150 active:scale-95"
-                >
-                  Tune Benson&apos;s set
-                </button>
-              </div>
+
             </div>
           </div>
 
@@ -1729,20 +1722,14 @@ export default function GMPCLiveRadio() {
               <p className="font-sans text-[#e5e7eb] text-sm leading-relaxed opacity-90 max-w-md">
                 Co-Founder & Creative Director. Curating GMPC&apos;s rich cultural voice, global resident DJ lists, visual brand guidelines, and community outreach programs focused on authentic underground preservation.
               </p>
-              <div className="flex gap-3 justify-center xl:justify-start pt-2">
-                <button 
-                  onClick={() => selectChannel(CHANNELS[1], true)}
-                  className="bg-white/10 hover:bg-[#ff6c2f] text-white px-4 py-2 rounded-full font-mono text-[10px] uppercase tracking-wide transition-all duration-150 active:scale-95"
-                >
-                  Tune Nubian&apos;s set
-                </button>
-              </div>
+
             </div>
           </div>
 
           {/* Driver 3: Mergelab */}
-          <div className="bg-[#191919] text-white rounded-[32px] overflow-hidden p-6 md:p-8 border border-white/5 flex flex-col xl:flex-row items-center gap-8 group">
-            <div className="relative w-48 h-48 md:w-52 md:h-52 rounded-full xl:rounded-2xl overflow-hidden shrink-0 border border-white/10 ring-2 ring-white/10 shadow-xl">
+          <div className="md:col-span-2 flex justify-center">
+            <div className="w-full md:w-[calc(50%-1rem)] bg-[#191919] text-white rounded-[32px] overflow-hidden p-6 md:p-8 border border-white/5 flex flex-col xl:flex-row items-center gap-8 group">
+              <div className="relative w-48 h-48 md:w-52 md:h-52 rounded-full xl:rounded-2xl overflow-hidden shrink-0 border border-white/10 ring-2 ring-white/10 shadow-xl">
               <Image
                 src={mergelabPic}
                 alt="Mergelab GMPC Co-founder"
@@ -1760,15 +1747,9 @@ export default function GMPCLiveRadio() {
               <p className="font-sans text-[#e5e7eb] text-sm leading-relaxed opacity-90 max-w-md">
                 Co-Founder & Technical Lead. Driving the digital infrastructure, custom-built tools, and technical integrations that keep GMPC Live Radio on the cutting edge of underground broadcasting.
               </p>
-              <div className="flex gap-3 justify-center xl:justify-start pt-2">
-                <button 
-                  onClick={() => selectChannel(CHANNELS[2], true)}
-                  className="bg-white/10 hover:bg-[#ff6c2f] text-white px-4 py-2 rounded-full font-mono text-[10px] uppercase tracking-wide transition-all duration-150 active:scale-95"
-                >
-                  Tune Mergelab&apos;s set
-                </button>
-              </div>
+
             </div>
+          </div>
           </div>
 
         </div>
