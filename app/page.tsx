@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import gmpcStudioHero from "@/src/assets/images/gmpc_multi_hero_1782565826345.jpg";
 import bensonPic from "@/src/assets/images/benson_portrait_1781851083845.jpg";
 import nubianPic from "@/src/assets/images/nubian_portrait_1781851100791.jpg";
+import mergelabPic from "@/src/assets/images/mergelab_portrait_1782571495460.jpg";
 
 // Defined categories for filtering residents
 type GenreCategory = "AMAPIANO" | "SOUL" | "REGGAE" | "DANCEHALL" | "AFROBEATS" | "OLD SCHOOL" | "GOSPEL" | "DEEP HOUSE";
@@ -1674,12 +1675,12 @@ export default function GMPCLiveRadio() {
           </div>
         </div>
 
-        {/* Two Portrait Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Three Portrait Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           
           {/* Driver 1: Benson */}
-          <div className="bg-[#191919] text-white rounded-[32px] overflow-hidden p-6 md:p-8 border border-white/5 flex flex-col md:flex-row items-center gap-8 group">
-            <div className="relative w-48 h-48 md:w-52 md:h-52 rounded-full md:rounded-2xl overflow-hidden shrink-0 border border-white/10 ring-2 ring-white/10 shadow-xl">
+          <div className="bg-[#191919] text-white rounded-[32px] overflow-hidden p-6 md:p-8 border border-white/5 flex flex-col xl:flex-row items-center gap-8 group">
+            <div className="relative w-48 h-48 md:w-52 md:h-52 rounded-full xl:rounded-2xl overflow-hidden shrink-0 border border-white/10 ring-2 ring-white/10 shadow-xl">
               <Image
                 src={bensonPic}
                 alt="Benson GMPC Co-founder"
@@ -1689,15 +1690,15 @@ export default function GMPCLiveRadio() {
                 referrerPolicy="no-referrer"
               />
             </div>
-            <div className="space-y-4 text-center md:text-left flex-1">
+            <div className="space-y-4 text-center xl:text-left flex-1">
               <div>
-                <span className="text-[#ff6c2f] font-mono text-[9px] uppercase tracking-widest font-bold">CO-FOUNDER / TECHNICAL LEAD</span>
+                <span className="text-[#ff6c2f] font-mono text-[9px] uppercase tracking-widest font-bold">CO-FOUNDER / CREATIVE LEAD</span>
                 <h3 className="font-sans font-bold text-2xl uppercase tracking-tight text-white mt-0.5">BENSON</h3>
               </div>
               <p className="font-sans text-[#e5e7eb] text-sm leading-relaxed opacity-90 max-w-md">
                 Co-Founder & Technical Lead. The brilliant audio engineer and architect behind the uncompromised custom-built GMPC Studio acoustics, audio rack design, and multi-camera stream automation console.
               </p>
-              <div className="flex gap-3 justify-center md:justify-start pt-2">
+              <div className="flex gap-3 justify-center xl:justify-start pt-2">
                 <button 
                   onClick={() => selectChannel(CHANNELS[0], true)}
                   className="bg-white/10 hover:bg-[#ff6c2f] text-white px-4 py-2 rounded-full font-mono text-[10px] uppercase tracking-wide transition-all duration-150 active:scale-95"
@@ -1709,8 +1710,8 @@ export default function GMPCLiveRadio() {
           </div>
 
           {/* Driver 2: Nubian */}
-          <div className="bg-[#191919] text-white rounded-[32px] overflow-hidden p-6 md:p-8 border border-white/5 flex flex-col md:flex-row items-center gap-8 group">
-            <div className="relative w-48 h-48 md:w-52 md:h-52 rounded-full md:rounded-2xl overflow-hidden shrink-0 border border-white/10 ring-2 ring-white/10 shadow-xl">
+          <div className="bg-[#191919] text-white rounded-[32px] overflow-hidden p-6 md:p-8 border border-white/5 flex flex-col xl:flex-row items-center gap-8 group">
+            <div className="relative w-48 h-48 md:w-52 md:h-52 rounded-full xl:rounded-2xl overflow-hidden shrink-0 border border-white/10 ring-2 ring-white/10 shadow-xl">
               <Image
                 src={nubianPic}
                 alt="Nubian GMPC Co-founder"
@@ -1720,20 +1721,51 @@ export default function GMPCLiveRadio() {
                 referrerPolicy="no-referrer"
               />
             </div>
-            <div className="space-y-4 text-center md:text-left flex-1">
+            <div className="space-y-4 text-center xl:text-left flex-1">
               <div>
-                <span className="text-[#ff6c2f] font-mono text-[9px] uppercase tracking-widest font-bold">CO-FOUNDER / CREATIVE DIRECTOR</span>
+                <span className="text-[#ff6c2f] font-mono text-[9px] uppercase tracking-widest font-bold">CO-FOUNDER / MARKETING DIRECTOR</span>
                 <h3 className="font-sans font-bold text-2xl uppercase tracking-tight text-white mt-0.5">NUBIAN</h3>
               </div>
               <p className="font-sans text-[#e5e7eb] text-sm leading-relaxed opacity-90 max-w-md">
                 Co-Founder & Creative Director. Curating GMPC&apos;s rich cultural voice, global resident DJ lists, visual brand guidelines, and community outreach programs focused on authentic underground preservation.
               </p>
-              <div className="flex gap-3 justify-center md:justify-start pt-2">
+              <div className="flex gap-3 justify-center xl:justify-start pt-2">
                 <button 
                   onClick={() => selectChannel(CHANNELS[1], true)}
                   className="bg-white/10 hover:bg-[#ff6c2f] text-white px-4 py-2 rounded-full font-mono text-[10px] uppercase tracking-wide transition-all duration-150 active:scale-95"
                 >
                   Tune Nubian&apos;s set
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Driver 3: Mergelab */}
+          <div className="bg-[#191919] text-white rounded-[32px] overflow-hidden p-6 md:p-8 border border-white/5 flex flex-col xl:flex-row items-center gap-8 group">
+            <div className="relative w-48 h-48 md:w-52 md:h-52 rounded-full xl:rounded-2xl overflow-hidden shrink-0 border border-white/10 ring-2 ring-white/10 shadow-xl">
+              <Image
+                src={mergelabPic}
+                alt="Mergelab GMPC Co-founder"
+                fill
+                priority
+                className="object-cover grayscale filter transition-transform duration-500 group-hover:scale-105"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div className="space-y-4 text-center xl:text-left flex-1">
+              <div>
+                <span className="text-[#ff6c2f] font-mono text-[9px] uppercase tracking-widest font-bold">CO-FOUNDER / TECHNICAL LEAD</span>
+                <h3 className="font-sans font-bold text-2xl uppercase tracking-tight text-white mt-0.5">MERGELAB</h3>
+              </div>
+              <p className="font-sans text-[#e5e7eb] text-sm leading-relaxed opacity-90 max-w-md">
+                Co-Founder & Technical Lead. Driving the digital infrastructure, custom-built tools, and technical integrations that keep GMPC Live Radio on the cutting edge of underground broadcasting.
+              </p>
+              <div className="flex gap-3 justify-center xl:justify-start pt-2">
+                <button 
+                  onClick={() => selectChannel(CHANNELS[2], true)}
+                  className="bg-white/10 hover:bg-[#ff6c2f] text-white px-4 py-2 rounded-full font-mono text-[10px] uppercase tracking-wide transition-all duration-150 active:scale-95"
+                >
+                  Tune Mergelab&apos;s set
                 </button>
               </div>
             </div>
