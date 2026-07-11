@@ -12,7 +12,6 @@ import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { AuroraBackground } from "@/src/components/magic/aurora-background";
 import { BorderBeam } from "@/src/components/magic/border-beam";
-import { ShimmerButton } from "@/src/components/magic/shimmer-button";
 import { SectionReveal } from "@/src/components/magic/section-reveal";
 import { SpotlightCard } from "@/src/components/magic/spotlight-card";
 
@@ -1216,13 +1215,13 @@ export default function GMPCLiveRadio() {
             className="flex flex-wrap gap-4 items-center w-full"
           >
             {/* Watch Live CTA Pill Button */}
-            <ShimmerButton
+            <button
               onClick={() => setShowLiveStream(!showLiveStream)}
-              className="border-[#ff6c2f] bg-[#ff6c2f] text-white hover:bg-[#ff6c2f] hover:border-[#ff6c2f]"
+              className="bg-[#ff6c2f] hover:bg-[#ff804a] text-white font-mono text-[11px] uppercase tracking-widest font-bold px-8 py-4.5 rounded-full shadow-lg transition-all duration-150 transform active:scale-95 flex items-center gap-2 cursor-pointer"
             >
               <Headphones className="w-4 h-4" />
-              <span>{showLiveStream ? "Close Live Stream" : "Watch Live Stream"}</span>
-            </ShimmerButton>
+              {showLiveStream ? "Close Live Stream" : "Watch Live Stream"}
+            </button>
 
             {/* Secondary join Discord style link */}
             <a
