@@ -32,11 +32,6 @@
   50% { opacity: 1; transform: scale(1.04); }
 }
 
-@keyframes aurora-text-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
 .animate-shimmer {
   animation: shimmer-slide 3.5s linear infinite;
 }
@@ -57,15 +52,10 @@
   animation: gentle-pulse 2.8s ease-in-out infinite;
 }
 
-.animate-aurora {
-  animation: aurora-text-shift 8s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .animate-shimmer,
   .aurora-orb,
-  .animate-gentle-pulse,
-  .animate-aurora {
+  .animate-gentle-pulse {
     animation: none !important;
   }
 }
