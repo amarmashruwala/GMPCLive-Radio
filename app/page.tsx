@@ -11,6 +11,7 @@ import {
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { AuroraBackground } from "@/src/components/magic/aurora-background";
+import { AuroraText } from "@/src/components/magic/aurora-text";
 import { BorderBeam } from "@/src/components/magic/border-beam";
 import { ShimmerButton } from "@/src/components/magic/shimmer-button";
 import { SectionReveal } from "@/src/components/magic/section-reveal";
@@ -1040,9 +1041,9 @@ export default function GMPCLiveRadio() {
               initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05, duration: 0.75, ease: "easeOut" }}
-              className="text-white text-[72px] sm:text-[90px] md:text-[110px] leading-[0.82] tracking-[-0.04em] font-bold select-none uppercase transition-opacity duration-75"
+              className="text-[72px] sm:text-[90px] md:text-[110px] leading-[0.82] tracking-[-0.04em] font-bold select-none uppercase transition-opacity duration-75"
             >
-              GMPC LIVE
+              <AuroraText className="block">GMPC LIVE</AuroraText>
             </motion.h1>
 
             {/* Subheading text */}
@@ -1054,7 +1055,9 @@ export default function GMPCLiveRadio() {
               className="text-[#e5e7eb] font-sans text-lg md:text-xl font-normal leading-[1.35] tracking-tight max-w-2xl pt-2 transition-opacity duration-75"
             >
               Watch, listen, and interact with our DJs live — music for the mind, body, and soul.
-              Broadcasting independent global frequencies from our custom-built analog GMPC Studio.
+              <span className="block pt-2">
+                Broadcasting independent <AuroraText className="font-semibold">global frequencies</AuroraText> from our custom-built analog GMPC Studio.
+              </span>
             </motion.p>
           </motion.div>
 
