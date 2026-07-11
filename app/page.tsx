@@ -1218,7 +1218,7 @@ export default function GMPCLiveRadio() {
             {/* Watch Live CTA Pill Button */}
             <ShimmerButton
               onClick={() => setShowLiveStream(!showLiveStream)}
-              className="border-white/10 bg-black/70"
+              className="border-[#ff6c2f] bg-[#ff6c2f] text-white hover:bg-[#ff6c2f] hover:border-[#ff6c2f]"
             >
               <Headphones className="w-4 h-4" />
               <span>{showLiveStream ? "Close Live Stream" : "Watch Live Stream"}</span>
