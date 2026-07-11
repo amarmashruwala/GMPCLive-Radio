@@ -8,8 +8,13 @@ import {
   Disc, Sliders, Headphones, Layers, HelpCircle, Flame, Calendar, Sun, Moon, ArrowUp, Mic,
   Phone, Mail, Facebook, Youtube, Music, Instagram
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
+import { AuroraBackground } from "@/src/components/magic/aurora-background";
+import { BorderBeam } from "@/src/components/magic/border-beam";
+import { ShimmerButton } from "@/src/components/magic/shimmer-button";
+import { SectionReveal } from "@/src/components/magic/section-reveal";
+import { SpotlightCard } from "@/src/components/magic/spotlight-card";
 
 // Static imports of our generated images using the paths confirmed on disk
 import gmpcStudioHero from "@/src/assets/images/gmpc_multi_hero_1782565826345.jpg";
@@ -214,8 +219,10 @@ export default function GMPCLiveRadio() {
 
   // Scroll Position state for dynamic text opacity fade on scroll
   const [scrollY, setScrollY] = React.useState(0);
+  const reduceMotion = useReducedMotion();
 
   React.useEffect(() => {
+
     if (typeof window === "undefined") return;
     const handleScroll = () => {
       setScrollY(window.scrollY);
@@ -999,6 +1006,7 @@ export default function GMPCLiveRadio() {
 
       {/* HERO SECTION / ATMOSPHERIC FULL VIEWPORT COVER */}
       <section className="relative w-full min-h-[95vh] md:min-h-screen bg-black flex flex-col justify-end overflow-hidden pt-28">
+        <AuroraBackground />
         {/* Full-bleed high-quality sunset photography */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -1006,37 +1014,48 @@ export default function GMPCLiveRadio() {
             alt="GMPC Studio Broadcast room"
             fill
             priority
-            className="object-cover opacity-80 scale-105 select-none"
+            className="object-cover opacity-78 scale-105 select-none"
             referrerPolicy="no-referrer"
           />
           {/* Subtle warm sunset overlay filter */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-transparent" />
         </div>
 
         {/* Content Container */}
         <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12 pb-16 md:pb-24 flex flex-col items-start gap-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+          <motion.div
+            initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-4 max-w-3xl"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="space-y-5 max-w-3xl"
           >
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm">
+              <span className="h-2 w-2 rounded-full bg-[#ff6c2f] animate-gentle-pulse" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-white/70">Live broadcast in motion</span>
+            </div>
+
             {/* Display Specimen Title matching Suisse Intl -0.03em tracking */}
-            <h1 
+            <motion.h1
               style={{ opacity: Math.max(0, 1 - scrollY / 500) }}
+              initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05, duration: 0.75, ease: "easeOut" }}
               className="text-white text-[72px] sm:text-[90px] md:text-[110px] leading-[0.82] tracking-[-0.04em] font-bold select-none uppercase transition-opacity duration-75"
             >
               GMPC LIVE
-            </h1>
+            </motion.h1>
 
             {/* Subheading text */}
-            <p 
+            <motion.p
               style={{ opacity: Math.max(0, 1 - scrollY / 500) }}
+              initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.14, duration: 0.75, ease: "easeOut" }}
               className="text-[#e5e7eb] font-sans text-lg md:text-xl font-normal leading-[1.35] tracking-tight max-w-2xl pt-2 transition-opacity duration-75"
             >
-              Watch, listen, and interact with our DJs live — music for the mind, body, and soul. 
+              Watch, listen, and interact with our DJs live — music for the mind, body, and soul.
               Broadcasting independent global frequencies from our custom-built analog GMPC Studio.
-            </p>
+            </motion.p>
           </motion.div>
 
           {/* Studio Cam and Radio Chat (Toggled in the Hero section above the buttons) */}
@@ -1049,139 +1068,141 @@ export default function GMPCLiveRadio() {
                 transition={{ duration: 0.4, ease: "easeInOut" }}
                 className="w-full overflow-hidden"
               >
-                {/* Main 2-Column Grid (65% Studio Cam / 35% Live Chat) */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch w-full mb-4">
-                  
-                  {/* Column 1: STUDIO CAM (8 / 12) */}
-                  <div className={cn(
-                    "lg:col-span-8 h-fit lg:self-start rounded-[24px] overflow-hidden border flex flex-col justify-start transition-all duration-300",
-                    theme === "dark" ? "bg-[#18191c] border-zinc-800" : "bg-white border-[#e5e7eb]"
-                  )}>
+                <div className="relative mb-4 rounded-[28px] border border-white/10 bg-black/25 p-2 shadow-2xl shadow-black/20 backdrop-blur-sm">
+                  <BorderBeam className="rounded-[28px]" duration={8} delay={0.5} />
+                  {/* Main 2-Column Grid (65% Studio Cam / 35% Live Chat) */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch w-full">
                     
-                    {/* Header Area */}
+                    {/* Column 1: STUDIO CAM (8 / 12) */}
                     <div className={cn(
-                      "p-6 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors",
-                      theme === "dark" ? "border-zinc-800" : "border-[#e5e7eb]"
-                    )}>
-                      <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 bg-[#ff6c2f] rounded-full animate-ping" />
-                        <span className={cn(
-                          "font-sans font-bold text-xs uppercase tracking-wider transition-colors",
-                          theme === "dark" ? "text-white" : "text-[#191c1f]"
-                        )}>
-                          STUDIO CAM
-                        </span>
-                        <span className={cn(
-                          "font-mono text-[11px] px-2 border-l transition-colors",
-                          theme === "dark" ? "text-[#a3a3a3] border-zinc-800" : "text-[#a3a3a3] border-[#e5e7eb]"
-                        )}>
-                          4K STREAM FEED
-                        </span>
-                      </div>
-
-                      {/* Multi-Camera Control Switcher */}
-                      <div className="flex items-center gap-2">
-                        <div className="flex flex-wrap items-center gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-full border border-black/10 dark:border-white/10 select-none">
-                          {(["cam1", "cam2"] as CamFeed[]).map((feed) => (
-                            <button
-                              key={feed}
-                              onClick={() => setActiveCam(feed)}
-                              className={cn(
-                                "px-3 py-1 rounded-full font-mono text-[9px] uppercase select-none font-bold transition-all cursor-pointer",
-                                activeCam === feed
-                                  ? "bg-[#ff6c2f] text-white shadow-sm"
-                                  : theme === "dark"
-                                    ? "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
-                                    : "text-zinc-600 hover:text-[#191c1f] hover:bg-black/5"
-                              )}
-                            >
-                              {feed === "cam1" && "CAM 01"}
-                              {feed === "cam2" && "CAM 02"}
-                            </button>
-                          ))}
-                        </div>
-
-                        {/* Live Status indicator */}
-                        <div className={cn(
-                          "hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full border font-mono text-[9px] uppercase select-none font-bold transition-all",
-                          theme === "dark"
-                            ? "bg-zinc-800/60 border-zinc-700 text-zinc-300"
-                            : "bg-[#e5e7eb]/60 border-[#e5e7eb] text-[#191c1f]/80"
-                        )}>
-                          <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                          {activeCam === "cam1" ? "CAM 01 ACTIVE" : "CAM 02 ACTIVE"}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Video / Interactive Feed Display */}
-                    <div className="relative aspect-video w-full bg-[#191c1f] overflow-hidden group flex items-center justify-center">
-                      {/* Camera Angle 1: Studio Space Live Stream CAM 01 */}
-                      {activeCam === "cam1" && (
-                        <div className="absolute inset-0 z-0">
-                          <iframe
-                            src="https://live.gmpclive.com/embed/video"
-                            className="w-full h-full border-none absolute inset-0 z-0"
-                            allow="autoplay; camera; microphone; picture-in-picture"
-                            title="GMPC Live Studio Cam 01"
-                          />
-                        </div>
-                      )}
-
-                      {/* Camera Angle 1b: Studio Space Live Stream CAM 02 */}
-                      {activeCam === "cam2" && (
-                        <div className="absolute inset-0 z-0">
-                          <iframe
-                            src="https://vdo.ninja/?view=vBRUKDQ&label=GMPC_DJ_Cam&noaudio&cleanviewer"
-                            className="w-full h-full border-none absolute inset-0 z-0"
-                            allow="autoplay; camera; microphone; picture-in-picture"
-                            title="GMPC Live Studio Cam 02"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Column 2: RADIO CHAT (4 / 12) */}
-                  <div className={cn(
-                    "lg:col-span-4 rounded-[24px] overflow-hidden border flex flex-col justify-between h-[450px] lg:h-auto transition-all duration-300",
-                    theme === "dark" ? "bg-[#18191c] border-zinc-800" : "bg-white border-[#e5e7eb]"
-                  )}>
-                    
-                    {/* Chat Header */}
-                    <div className={cn(
-                      "p-6 border-b flex items-center justify-between transition-colors",
+                      "lg:col-span-8 h-fit lg:self-start rounded-[24px] overflow-hidden border flex flex-col justify-start transition-all duration-300",
                       theme === "dark" ? "bg-[#18191c] border-zinc-800" : "bg-white border-[#e5e7eb]"
                     )}>
-                      <div className="flex items-center gap-2">
-                        <MessageSquare className="w-4 h-4 text-[#ff6c2f]" />
-                        <span className={cn(
-                          "font-sans font-bold text-xs uppercase tracking-wider transition-colors",
-                          theme === "dark" ? "text-white" : "text-[#191c1f]"
-                        )}>
-                          RADIO CHAT
-                        </span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                      
+                      {/* Header Area */}
+                      <div className={cn(
+                        "p-6 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors",
+                        theme === "dark" ? "border-zinc-800" : "border-[#e5e7eb]"
+                      )}>
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 bg-[#ff6c2f] rounded-full animate-ping" />
+                          <span className={cn(
+                            "font-sans font-bold text-xs uppercase tracking-wider transition-colors",
+                            theme === "dark" ? "text-white" : "text-[#191c1f]"
+                          )}>
+                            STUDIO CAM
+                          </span>
+                          <span className={cn(
+                            "font-mono text-[11px] px-2 border-l transition-colors",
+                            theme === "dark" ? "text-[#a3a3a3] border-zinc-800" : "text-[#a3a3a3] border-[#e5e7eb]"
+                          )}>
+                            4K STREAM FEED
+                          </span>
+                        </div>
+
+                        {/* Multi-Camera Control Switcher */}
+                        <div className="flex items-center gap-2">
+                          <div className="flex flex-wrap items-center gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-full border border-black/10 dark:border-white/10 select-none">
+                            {(["cam1", "cam2"] as CamFeed[]).map((feed) => (
+                              <button
+                                key={feed}
+                                onClick={() => setActiveCam(feed)}
+                                className={cn(
+                                  "px-3 py-1 rounded-full font-mono text-[9px] uppercase select-none font-bold transition-all cursor-pointer",
+                                  activeCam === feed
+                                    ? "bg-[#ff6c2f] text-white shadow-sm"
+                                    : theme === "dark"
+                                      ? "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                                      : "text-zinc-600 hover:text-[#191c1f] hover:bg-black/5"
+                                )}
+                              >
+                                {feed === "cam1" && "CAM 01"}
+                                {feed === "cam2" && "CAM 02"}
+                              </button>
+                            ))}
+                          </div>
+
+                          {/* Live Status indicator */}
+                          <div className={cn(
+                            "hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full border font-mono text-[9px] uppercase select-none font-bold transition-all",
+                            theme === "dark"
+                              ? "bg-zinc-800/60 border-zinc-700 text-zinc-300"
+                              : "bg-[#e5e7eb]/60 border-[#e5e7eb] text-[#191c1f]/80"
+                          )}>
+                            <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                            {activeCam === "cam1" ? "CAM 01 ACTIVE" : "CAM 02 ACTIVE"}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Video / Interactive Feed Display */}
+                      <div className="relative aspect-video w-full bg-[#191c1f] overflow-hidden group flex items-center justify-center">
+                        {/* Camera Angle 1: Studio Space Live Stream CAM 01 */}
+                        {activeCam === "cam1" && (
+                          <div className="absolute inset-0 z-0">
+                            <iframe
+                              src="https://live.gmpclive.com/embed/video"
+                              className="w-full h-full border-none absolute inset-0 z-0"
+                              allow="autoplay; camera; microphone; picture-in-picture"
+                              title="GMPC Live Studio Cam 01"
+                            />
+                          </div>
+                        )}
+
+                        {/* Camera Angle 1b: Studio Space Live Stream CAM 02 */}
+                        {activeCam === "cam2" && (
+                          <div className="absolute inset-0 z-0">
+                            <iframe
+                              src="https://vdo.ninja/?view=vBRUKDQ&label=GMPC_DJ_Cam&noaudio&cleanviewer"
+                              className="w-full h-full border-none absolute inset-0 z-0"
+                              allow="autoplay; camera; microphone; picture-in-picture"
+                              title="GMPC Live Studio Cam 02"
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* Scrolling Chat Window */}
-                    <div 
-                      id="gmpc-chat-window"
-                      className={cn(
-                        "flex-1 w-full min-h-[300px] overflow-hidden transition-colors",
-                        theme === "dark" ? "bg-[#111214]" : "bg-[#f2f4f8]"
-                      )}
-                    >
-                      <iframe 
-                        src={`https://chat.gmpclive.com/channel/Radio-Chat?layout=embedded${theme === "dark" ? "&theme=dark" : ""}`}
-                        className="w-full h-full border-none block"
-                        title="GMPC Live Radio Chat"
-                        allow="autoplay; camera; microphone"
-                      />
+                    {/* Column 2: RADIO CHAT (4 / 12) */}
+                    <div className={cn(
+                      "lg:col-span-4 rounded-[24px] overflow-hidden border flex flex-col justify-between h-[450px] lg:h-auto transition-all duration-300",
+                      theme === "dark" ? "bg-[#18191c] border-zinc-800" : "bg-white border-[#e5e7eb]"
+                    )}>
+                      
+                      {/* Chat Header */}
+                      <div className={cn(
+                        "p-6 border-b flex items-center justify-between transition-colors",
+                        theme === "dark" ? "bg-[#18191c] border-zinc-800" : "bg-white border-[#e5e7eb]"
+                      )}>
+                        <div className="flex items-center gap-2">
+                          <MessageSquare className="w-4 h-4 text-[#ff6c2f]" />
+                          <span className={cn(
+                            "font-sans font-bold text-xs uppercase tracking-wider transition-colors",
+                            theme === "dark" ? "text-white" : "text-[#191c1f]"
+                          )}>
+                            RADIO CHAT
+                          </span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                        </div>
+                      </div>
+
+                      {/* Scrolling Chat Window */}
+                      <div
+                        id="gmpc-chat-window"
+                        className={cn(
+                          "flex-1 w-full min-h-[300px] overflow-hidden transition-colors",
+                          theme === "dark" ? "bg-[#111214]" : "bg-[#f2f4f8]"
+                        )}
+                      >
+                        <iframe
+                          src={`https://chat.gmpclive.com/channel/Radio-Chat?layout=embedded${theme === "dark" ? "&theme=dark" : ""}`}
+                          className="w-full h-full border-none block"
+                          title="GMPC Live Radio Chat"
+                          allow="autoplay; camera; microphone"
+                        />
+                      </div>
                     </div>
                   </div>
-
                 </div>
               </motion.div>
             )}
@@ -1195,16 +1216,16 @@ export default function GMPCLiveRadio() {
             className="flex flex-wrap gap-4 items-center w-full"
           >
             {/* Watch Live CTA Pill Button */}
-            <button
+            <ShimmerButton
               onClick={() => setShowLiveStream(!showLiveStream)}
-              className="bg-[#ff6c2f] hover:bg-[#ff804a] text-white font-mono text-[11px] uppercase tracking-widest font-bold px-8 py-4.5 rounded-full shadow-lg transition-all duration-150 transform active:scale-95 flex items-center gap-2 cursor-pointer"
+              className="border-white/10 bg-black/70"
             >
               <Headphones className="w-4 h-4" />
-              {showLiveStream ? "CLOSE LIVE STREAM" : "WATCH LIVE STREAM"}
-            </button>
+              <span>{showLiveStream ? "Close Live Stream" : "Watch Live Stream"}</span>
+            </ShimmerButton>
 
             {/* Secondary join Discord style link */}
-            <a 
+            <a
               href="#weekly-schedule"
               className="border border-white/20 hover:border-white text-white font-mono text-[11px] uppercase tracking-widest px-8 py-4.5 rounded-full transition-all duration-150 flex items-center gap-2 hover:bg-white/5"
             >
@@ -1222,8 +1243,7 @@ export default function GMPCLiveRadio() {
       </section>
 
       {/* WEEKLY SHOW SCHEDULE / PROGRAMS GRID */}
-      <section id="weekly-schedule" className="max-w-7xl mx-auto w-full px-4 md:px-8 mt-24 md:mt-32 scroll-mt-24 select-none">
-        
+      <SectionReveal className="max-w-7xl mx-auto w-full px-4 md:px-8 mt-24 md:mt-32 scroll-mt-24 select-none" id="weekly-schedule">
         {/* Section Header Block (2-Column structure as specified) */}
         <div className={cn(
           "grid grid-cols-1 md:grid-cols-12 gap-8 border-b pb-8 mb-12 transition-colors",
@@ -1242,8 +1262,7 @@ export default function GMPCLiveRadio() {
               "font-sans text-[15px] leading-[1.45] max-w-md transition-colors",
               theme === "dark" ? "text-zinc-400" : "text-[#5e5e5e]"
             )}>
-              The frequency of the golden hour. A curated rotation of 
-              global sounds, legendary veterans, and local acoustic expertise broadcasting live every day.
+              The frequency of the golden hour. A curated rotation of global sounds, legendary veterans, and local acoustic expertise broadcasting live every day.
             </p>
           </div>
         </div>
@@ -1253,23 +1272,29 @@ export default function GMPCLiveRadio() {
           {SCHEDULE.map((item, index) => {
             const isFlagship = item.day === "FRIDAY 12AM";
             return (
-              <div
+              <motion.div
                 key={index}
+                initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+                transition={{ duration: 0.45, ease: "easeOut", delay: reduceMotion ? 0 : index * 0.04 }}
                 onClick={() => setSelectedScheduleDay(item)}
                 className={cn(
-                  "rounded-[24px] p-6 h-[180px] flex flex-col justify-between border cursor-pointer group transition-all duration-150 active:scale-98",
+                  "group relative rounded-[24px] p-6 h-[180px] flex flex-col justify-between border cursor-pointer transition-all duration-300 active:scale-[0.98] overflow-hidden",
                   isFlagship
                     ? (theme === "dark" ? "bg-[#1f2024] border-zinc-700 text-white shadow-lg" : "bg-[#191c1f] border-transparent text-white shadow-lg shadow-black/10 hover:bg-[#25282c]")
                     : (theme === "dark"
-                        ? "bg-[#18191c] hover:bg-[#1f2125] text-white border-zinc-800 hover:border-[#ff6c2f]"
-                        : "bg-white hover:bg-white text-[#191c1f] border-[#e5e7eb] hover:border-[#ff6c2f]")
+                        ? "bg-[#18191c] hover:bg-[#1f2125] text-white border-zinc-800 hover:border-[#ff6c2f] hover:-translate-y-1"
+                        : "bg-white hover:bg-white text-[#191c1f] border-[#e5e7eb] hover:border-[#ff6c2f] hover:-translate-y-1")
                 )}
               >
-                <div>
-                  <div className={cn(
-                    "font-mono text-[10px] tracking-widest leading-none mb-4 font-bold uppercase",
-                    isFlagship ? "text-[#ff6c2f]" : "text-[#ff6c2f]"
-                  )}>
+                {isFlagship && <BorderBeam duration={7.5} delay={1.5} />}
+                <div className={cn(
+                  "absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,108,47,0.18),transparent_45%)] opacity-0 transition-opacity duration-300",
+                  isFlagship ? "opacity-100" : "group-hover:opacity-100"
+                )} />
+                <div className="relative z-10">
+                  <div className="font-mono text-[10px] tracking-widest leading-none mb-4 font-bold uppercase text-[#ff6c2f]">
                     {item.day}
                   </div>
                   <h3 className={cn(
@@ -1281,7 +1306,7 @@ export default function GMPCLiveRadio() {
                 </div>
 
                 <div className={cn(
-                  "flex items-end justify-between border-t pt-4 mt-auto transition-colors",
+                  "relative z-10 flex items-end justify-between border-t pt-4 mt-auto transition-colors",
                   theme === "dark" ? "border-zinc-800/80" : "border-[#e5e7eb]/10"
                 )}>
                   <span className={cn(
@@ -1295,15 +1320,14 @@ export default function GMPCLiveRadio() {
                     isFlagship ? "text-[#ff6c2f]" : (theme === "dark" ? "text-white" : "text-[#191c1f]")
                   )} />
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
-      </section>
+      </SectionReveal>
 
       {/* THE RESIDENTS / OUR COMMUNITY SECTION */}
-      <section id="residents-grid" className="max-w-7xl mx-auto w-full px-4 md:px-8 mt-24 md:mt-32 scroll-mt-24">
-        
+      <SectionReveal id="residents-grid" className="max-w-7xl mx-auto w-full px-4 md:px-8 mt-24 md:mt-32 scroll-mt-24">
         {/* Section Header Block */}
         <div className={cn(
           "grid grid-cols-1 md:grid-cols-12 gap-8 border-b pb-8 mb-10 select-none transition-colors",
@@ -1332,7 +1356,6 @@ export default function GMPCLiveRadio() {
 
         {/* Filter Bar and Navigation wrapper */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-          {/* Filter Bar with uppercase labels in simple white cards (Aesthetic rule: normal spacing, 2px tag border radii) */}
           <div className={cn(
             "flex flex-wrap gap-2 select-none p-4.5 rounded-[16px] border transition-all duration-300 flex-1",
             theme === "dark" ? "bg-[#18191c] border-zinc-800" : "bg-white border-[#e5e7eb]"
@@ -1350,7 +1373,6 @@ export default function GMPCLiveRadio() {
             >
               ALL CAPABILITIES
             </button>
-            
             {(["AMAPIANO", "SOUL", "REGGAE", "DANCEHALL", "AFROBEATS", "OLD SCHOOL", "GOSPEL", "DEEP HOUSE"] as GenreCategory[]).map((cat) => (
               <button
                 key={cat}
@@ -1369,7 +1391,6 @@ export default function GMPCLiveRadio() {
             ))}
           </div>
 
-          {/* Slider Controllers */}
           <div className="flex items-center gap-2 shrink-0 self-end md:self-auto bg-black/5 dark:bg-white/5 py-2 px-3 rounded-full border border-black/10 dark:border-white/10 select-none">
             <span className={cn(
               "font-mono text-[10px] uppercase font-bold tracking-widest px-2.5",
@@ -1377,61 +1398,48 @@ export default function GMPCLiveRadio() {
             )}>
               NAVIGATE
             </span>
-            <button
-              onClick={() => scrollCarousel("left")}
-              disabled={!canScrollLeft}
-              className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer border active:scale-95",
-                !canScrollLeft
-                  ? "opacity-30 cursor-not-allowed border-transparent text-zinc-400"
-                  : theme === "dark"
-                    ? "bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800 hover:text-white"
-                    : "bg-white hover:bg-[#e5e7eb] text-[#191c1f] border-[#e5e7eb]"
-              )}
-              title="Slide Left"
-            >
+            <button onClick={() => scrollCarousel("left")} disabled={!canScrollLeft} className={cn(
+              "w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer border active:scale-95",
+              !canScrollLeft
+                ? "opacity-30 cursor-not-allowed border-transparent text-zinc-400"
+                : theme === "dark"
+                  ? "bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800 hover:text-white"
+                  : "bg-white hover:bg-[#e5e7eb] text-[#191c1f] border-[#e5e7eb]"
+            )} title="Slide Left">
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <button
-              onClick={() => scrollCarousel("right")}
-              disabled={!canScrollRight}
-              className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer border active:scale-95",
-                !canScrollRight
-                  ? "opacity-30 cursor-not-allowed border-transparent text-zinc-400"
-                  : theme === "dark"
-                    ? "bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800 hover:text-white"
-                    : "bg-white hover:bg-[#e5e7eb] text-[#191c1f] border-[#e5e7eb]"
-              )}
-              title="Slide Right"
-            >
+            <button onClick={() => scrollCarousel("right")} disabled={!canScrollRight} className={cn(
+              "w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer border active:scale-95",
+              !canScrollRight
+                ? "opacity-30 cursor-not-allowed border-transparent text-zinc-400"
+                : theme === "dark"
+                  ? "bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800 hover:text-white"
+                  : "bg-white hover:bg-[#e5e7eb] text-[#191c1f] border-[#e5e7eb]"
+            )} title="Slide Right">
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Sliding Carousel Card track wrapper */}
         <div className="relative group/carousel">
-          {/* Subtle fade modifiers on left and right borders of the viewport area */}
           <div className={cn(
             "absolute -left-3 top-0 bottom-0 w-12 z-20 pointer-events-none transition-opacity duration-300",
             canScrollLeft ? "opacity-100" : "opacity-0"
           )} style={{
-            background: theme === "dark" 
-              ? "linear-gradient(to right, #111214 0%, rgba(17, 18, 20, 0) 100%)" 
+            background: theme === "dark"
+              ? "linear-gradient(to right, #111214 0%, rgba(17, 18, 20, 0) 100%)"
               : "linear-gradient(to right, #e5e7eb 0%, rgba(229, 231, 235, 0) 100%)"
           }} />
           <div className={cn(
             "absolute -right-3 top-0 bottom-0 w-12 z-20 pointer-events-none transition-opacity duration-300",
             canScrollRight ? "opacity-100" : "opacity-0"
           )} style={{
-            background: theme === "dark" 
-              ? "linear-gradient(to left, #111214 0%, rgba(17, 18, 20, 0) 100%)" 
+            background: theme === "dark"
+              ? "linear-gradient(to left, #111214 0%, rgba(17, 18, 20, 0) 100%)"
               : "linear-gradient(to left, #e5e7eb 0%, rgba(229, 231, 235, 0) 100%)"
           }} />
 
-          {/* Carousel Track container */}
-          <div 
+          <div
             ref={carouselRef}
             onScroll={checkScrollLimits}
             onMouseEnter={() => { isHoveredRef.current = true; }}
@@ -1439,71 +1447,48 @@ export default function GMPCLiveRadio() {
             onTouchStart={() => { isHoveredRef.current = true; }}
             onTouchEnd={() => { isHoveredRef.current = false; }}
             className="flex overflow-x-auto gap-6 pb-6 pt-1 scrollbar-none"
-            style={{
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-              scrollBehavior: "auto"
-            }}
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none", scrollBehavior: "auto" }}
           >
             <AnimatePresence mode="popLayout">
-              {filteredResidents.map((dj) => (
+              {filteredResidents.map((dj, index) => (
                 <motion.div
                   layout
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.25 }}
+                  transition={{ duration: 0.3, delay: reduceMotion ? 0 : index * 0.03 }}
                   key={dj.id}
                   className="w-[245px] sm:w-[280px] shrink-0"
                 >
-                  <div
+                  <SpotlightCard
                     onClick={() => setSelectedDJForModal(dj)}
                     className={cn(
-                      "group/card relative aspect-[1/1.3] rounded-[24px] overflow-hidden cursor-pointer shadow-sm hover:shadow-md border active:scale-98 transition-all duration-300 w-full",
+                      "group/card relative aspect-[1/1.3] rounded-[24px] overflow-hidden cursor-pointer shadow-sm hover:shadow-md border active:scale-[0.98] transition-all duration-300 w-full",
                       theme === "dark" ? "bg-[#18191c] border-zinc-850" : "bg-[#ffffff] border-[#e5e7eb]/80"
                     )}
                   >
-                    {/* Edge-to-edge Portrait Imagery */}
                     <div className="absolute inset-0 z-0">
-                      <Image
-                        src={dj.imageUrl}
-                        alt={dj.name}
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                        className="object-cover opacity-90 transition-transform duration-500 group-hover/card:scale-105"
-                        referrerPolicy="no-referrer"
-                      />
-                      {/* Subtle vignette shade for readability */}
+                      <Image src={dj.imageUrl} alt={dj.name} fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw" className="object-cover opacity-90 transition-transform duration-500 group-hover/card:scale-105" referrerPolicy="no-referrer" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/35" />
                     </div>
-
-                    {/* Info overlays */}
                     <div className="absolute inset-0 z-10 p-5 flex flex-col justify-between">
                       <div className="flex items-start justify-between">
-                        <span className="bg-white/10 text-white font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-sm backdrop-blur-sm select-none">
-                          {dj.genre}
-                        </span>
+                        <span className="bg-white/10 text-white font-mono text-[9px] uppercase tracking-widest px-2.5 py-1 rounded-sm backdrop-blur-sm select-none">{dj.genre}</span>
                         <div className="w-8 h-8 rounded-full bg-white/15 hover:bg-[#ff6c2f]/90 text-white flex items-center justify-center backdrop-blur-sm group-hover/card:bg-[#ff6c2f] transition-all duration-200">
                           <Play className="w-3.5 h-3.5 fill-current stroke-none translate-x-0.5" />
                         </div>
                       </div>
-
                       <div className="space-y-0.5 select-none">
-                        <h3 className="text-white font-sans text-base font-bold uppercase tracking-tight truncate group-hover/card:text-[#ffa17a] transition-colors">
-                          {dj.name}
-                        </h3>
-                        <p className="text-[#a3a3a3] font-mono text-[9px] uppercase tracking-wider">
-                          {dj.role}
-                        </p>
+                        <h3 className="text-white font-sans text-base font-bold uppercase tracking-tight truncate group-hover/card:text-[#ffa17a] transition-colors">{dj.name}</h3>
+                        <p className="text-[#a3a3a3] font-mono text-[9px] uppercase tracking-wider">{dj.role}</p>
                       </div>
                     </div>
-                  </div>
+                  </SpotlightCard>
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
 
-          {/* Quick Manual Indicator Dots */}
           <div className="flex flex-wrap justify-center items-center gap-2 mt-2 select-none max-w-full px-4">
             {filteredResidents.map((dj, index) => (
               <button
@@ -1513,30 +1498,27 @@ export default function GMPCLiveRadio() {
                   if (carouselRef.current) {
                     const isSmall = typeof window !== "undefined" && window.innerWidth < 640;
                     const cardWidth = isSmall ? 245 : 280;
-                    const actualCardWidth = cardWidth + 24; // Width + gap-6
-                    carouselRef.current.scrollTo({
-                      left: index * actualCardWidth,
-                      behavior: "smooth"
-                    });
+                    const actualCardWidth = cardWidth + 24;
+                    carouselRef.current.scrollTo({ left: index * actualCardWidth, behavior: "smooth" });
                   }
                 }}
                 className={cn(
                   "h-1.5 rounded-full transition-all duration-300 cursor-pointer",
-                  activeIndex === index 
-                    ? "w-6 bg-[#ff6c2f]" 
-                    : theme === "dark" 
-                      ? "w-1.5 bg-zinc-700 hover:bg-zinc-500" 
+                  activeIndex === index
+                    ? "w-6 bg-[#ff6c2f]"
+                    : theme === "dark"
+                      ? "w-1.5 bg-zinc-700 hover:bg-zinc-500"
                       : "w-1.5 bg-zinc-300 hover:bg-zinc-500"
                 )}
                 title={`Go to ${dj.name}`}
               />
             ))}
           </div>
-
         </div>
-      </section>
+      </SectionReveal>
 
       {/* ABOUT GMPC / HISTORICAL BACKGROUND SECTION */}
+
       <section id="about-section" className="max-w-7xl mx-auto w-full px-4 md:px-8 mt-24 md:mt-32 scroll-mt-24 select-none">
         <div className="bg-[#191919] text-white rounded-[32px] p-8 md:p-16 border border-[#e5e7eb]/10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
@@ -1589,7 +1571,6 @@ export default function GMPCLiveRadio() {
 
       {/* PUBLIC FILE & STATS SECTION */}
       <section id="public-file" className="max-w-7xl mx-auto w-full px-4 md:px-8 mt-24 md:mt-32 scroll-mt-24">
-        
         {/* Core Title Center */}
         <div className="text-center space-y-3 mb-16 select-none">
           <h2 className={cn(
@@ -1787,6 +1768,7 @@ export default function GMPCLiveRadio() {
       </section>
 
       {/* JOIN US SECTION */}
+
       <section id="join-us-section" className="max-w-7xl mx-auto w-full px-4 md:px-8 mt-24 md:mt-32 scroll-mt-24 select-none">
         {/* Section Header Block */}
         <div className={cn(
